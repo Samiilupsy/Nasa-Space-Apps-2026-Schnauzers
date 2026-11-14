@@ -1,0 +1,8 @@
+numpy
+pandas
+scipy
+astropy
+skyfield
+tifffile
+streamlit
+plotly
