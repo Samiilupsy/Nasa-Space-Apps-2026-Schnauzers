@@ -4,14 +4,14 @@
 
 ---
 
-## 🚀 Overview
+## Overview
 Missions targeting the Moon's south pole operate under extreme illumination and communication constraints. Because the Moon's axial tilt is only ~1.54°, sunlight grazes the horizon nearly horizontally, casting long, permanent shadows across crater floors while illuminating elevated crater rims for extended periods. Meanwhile, Earth experiences slow apparent vertical oscillations (lunar libration) near the horizon, periodically interrupting Direct-to-Earth (DTE) radio links.
 
 **Lunar Landing Site Navigator** transforms raw orbital ephemerides and lunar elevation maps into an intuitive, interactive decision-support dashboard. It enables mission planners, researchers, and students to compare candidate landing sites and mission dates in seconds—integrating **deterministic orbital physics**, **local topographic horizon masking**, and **Monte Carlo landing dispersion risk analysis**.
 
 ---
 
-## ✨ Core Features
+## Core Features
 * **Celestial Ephemeris Engine:** Computes exact topocentric azimuth and elevation angles for both the Sun and Earth from any lunar south pole coordinate $(\text{lat}, \text{lon})$ across custom mission timelines.
 * **Topographic Horizon Occlusion & Power Estimation:** Models 360° local horizon elevation profiles from lunar Digital Elevation Models (DEM) to determine real solar and Earth visibility, converting solar incidence angles into estimated photovoltaic power ($W/m^2$).
 * **Monte Carlo Landing Dispersion Analysis:** Simulates spatial landing uncertainty using a bivariate normal dispersion ellipse $(X, Y) \sim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})$ around nominal target coordinates to quantify:
@@ -22,7 +22,7 @@ Missions targeting the Moon's south pole operate under extreme illumination and 
 
 ---
 
-## 🏗️ Repository Architecture
+## Repository Architecture
 The codebase is decoupled into four independent modules:
 
 ```text
