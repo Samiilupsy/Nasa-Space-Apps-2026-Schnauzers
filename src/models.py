@@ -1,3 +1,5 @@
+# Classes and variables
+
 from dataclasses import dataclass
 from datetime import datetime
 import pandas as pd
