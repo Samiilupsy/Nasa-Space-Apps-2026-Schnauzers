@@ -27,10 +27,13 @@ The codebase is decoupled into four independent modules:
 
 ```text
 Nasa-Space-Apps-2026-Schnauzers/
-├── ephemeris.py        # Solar & Earth topocentric azimuth/elevation calculations
-├── terrain.py          # Local horizon profile extraction & photovoltaic power model
-├── risk_model.py       # Monte Carlo landing ellipse simulation & viability scoring
-├── app.py              # Interactive Streamlit dashboard & Plotly visualizations
+├── src/
+│   ├── __init__.py
+│   ├── models.py       # Shared data structures (LandingSite, MissionWindow, RiskReport)
+│   ├── ephemeris.py    # Solar & Earth topocentric azimuth/elevation calculations
+│   ├── terrain.py      # Local horizon profile extraction & photovoltaic power model
+│   └── risk_engine.py  # Monte Carlo landing ellipse simulation & viability scoring
 ├── data/               # Candidate coordinates and processed LRO LOLA elevation subsets
+├── app.py              # Interactive Streamlit dashboard & Plotly visualizations
 ├── requirements.txt    # Python dependencies
 └── README.md           # Project documentation
