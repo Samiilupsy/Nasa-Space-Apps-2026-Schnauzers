@@ -73,4 +73,60 @@ class EphemerisEngine:
         phi = np.radians(lat)
         lam = np.radians(lon)
 
-       
+       ----
+# Position of the site in the surface (including topocentic "paralaje")
+        obs_x = self.MOON_RADIUS_KM * np.cos(phi) * np.cos(lam)
+        obs_y = self.MOON_RADIUS_KM * np.cos(phi) * np.sin(lam)
+        obs_z = self.MOON_RADIUS_KM * np.sin(phi)
+
+        dx = body_vec_seleno[0] - obs_x
+        dy = body_vec_seleno[1] - obs_y
+        dz = body_vec_seleno[2] - obs_z
+
+        # Proyecction Est-Nort-Up (ENU)
+        east = -np.sin(lam) * dx + np.cos(lam) * dy
+        north = (
+            -np.sin(phi) * np.cos(lam) * dx
+            - np.sin(phi) * np.sin(lam) * dy
+            + np.cos(phi) * dz
+        )
+        up = (
+            np.cos(phi) * np.cos(lam) * dx
+            + np.cos(phi) * np.sin(lam) * dy
+            + np.sin(phi) * dz
+        )
+
+        dist = np.sqrt(east**2 + north**2 + up**2)
+        el_deg = np.degrees(np.arcsin(np.clip(up / dist, -1.0, 1.0)))
+        az_deg = np.degrees(np.arctan2(east, north)) % 360.0
+        return az_deg, el_deg
+
+    def compute(self, site: LandingSite, window: MissionWindow) -> pd.DataFrame:
+        timestamps = pd.date_range(
+            start=window.start_date,
+            end=window.end_date,
+            freq=f"{window.step_hours}h",
+        )
+        if timestamps.tz is None:
+            timestamps = timestamps.tz_localize("UTC")
+        else:
+            timestamps = timestamps.tz_convert("UTC")
+
+        t = self.ts.from_datetimes(timestamps.to_pydatetime())
+
+        sun_icrf = (self.sun - self.moon).at(t).position.km
+        earth_icrf = (self.earth - self.moon).at(t).position.km
+
+        sun_seleno = self._icrf_to_selenographic(sun_icrf, t)
+        earth_seleno = self._icrf_to_selenographic(earth_icrf, t)
+
+        sun_az, sun_el = self._to_topocentric_az_el(sun_seleno, site.lat, site.lon)
+        earth_az, earth_el = self._to_topocentric_az_el(earth_seleno, site.lat, site.lon)
+
+        return pd.DataFrame({
+            "timestamp": timestamps, #date and hour
+            "sun_az": sun_az, #Sun Azimut
+            "sun_el": sun_el, # Sun elevation
+            "earth_az": earth_az, #Earth azimuth
+            "earth_el": earth_el, #E azimuth
+        })
